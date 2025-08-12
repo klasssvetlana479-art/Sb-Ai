@@ -1,0 +1,298 @@
+<!--
+  subscription_site.html
+  Light, minimal subscription landing page for GitHub Pages / Netlify.
+
+  IMPORTANT:
+  - This is a static frontend. For secure card payments with PayBox you MUST have a server-side
+    endpoint that creates a PayBox payment (invoice/session) and returns the payment URL or redirects.
+  - Buttons on this page point to /create-payment?plan={plan_key} — you should implement that route on
+    your server (see Node.js and Flask examples below inside this file).
+
+  Hosting:
+  - GitHub Pages: push this file as index.html to a repo's gh-pages branch or to main in a repo named username.github.io
+  - Netlify/Vercel: drag-and-drop or connect repo; they serve static files out-of-the-box.
+
+  PayBox integration (high level):
+  1) Register in paybox.money — get Merchant ID and Secret Key.
+  2) On server, create a payment request to PayBox (or generate signed parameters) and get payment URL.
+  3) Return the URL to frontend (or redirect user directly from server).
+  4) Handle PayBox webhooks on server to mark subscription active in your DB (paid_until etc.).
+
+  Below the HTML you'll find two example server snippets (Node/Express and Flask) — adapt them with
+  real PayBox API details and your merchant credentials.
+-->
+
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Подписки — SWellBot</title>
+  <meta name="description" content="Оформите подписку на SWellBot — персональные консультации и планы от Siberian Wellness.">
+  <style>
+    :root{--accent:#6C8CF5;--accent-2:#7DD3FC;--muted:#6b7280;--card:#ffffff;--bg:#f7f8fb}
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{font-family:Inter,system-ui,Segoe UI,Roboto,'Helvetica Neue',Arial; margin:0; background:var(--bg); color:#111}
+    .container{max-width:1100px;margin:40px auto;padding:24px}
+    header{display:flex;align-items:center;gap:16px}
+    .logo{width:56px;height:56px;border-radius:12px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:flex;align-items:center;justify-content:center;color:white;font-weight:700}
+    h1{margin:0;font-size:20px}
+    p.lead{color:var(--muted);margin-top:6px}
+
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:18px;margin-top:28px}
+    .card{background:var(--card);border-radius:12px;padding:18px;box-shadow:0 6px 18px rgba(17,24,39,0.06);display:flex;flex-direction:column;gap:12px}
+    .price{font-size:22px;font-weight:700;color:#0f172a}
+    .period{color:var(--muted);font-size:14px}
+    .benefits{list-style:none;padding:0;margin:0 0 8px 0;color:var(--muted);font-size:14px}
+    .benefits li{padding:6px 0;border-top:1px dashed #eef2ff}
+    .btn{display:inline-block;padding:10px 14px;border-radius:10px;background:linear-gradient(90deg,var(--accent),var(--accent-2));color:white;text-decoration:none;font-weight:600}
+    footer{margin-top:30px;color:var(--muted);font-size:13px}
+
+    .ribbon{position:absolute;right:12px;top:12px;background:#ffefc3;color:#7a4b00;padding:6px 10px;border-radius:8px;font-weight:700;font-size:12px}
+    .hero{display:flex;align-items:center;justify-content:space-between;gap:20px}
+    @media(max-width:700px){.hero{flex-direction:column;align-items:flex-start}}
+
+    /* small subtle cards layout */
+    .card .meta{display:flex;justify-content:space-between;align-items:center}
+    .muted-small{color:var(--muted);font-size:13px}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="logo">SW</div>
+      <div>
+        <h1>SWellBot — Подписки</h1>
+        <p class="lead">Выберите удобный тариф и получите персональные рекомендации, планы питания и поддержку от нашего сервиса.</p>
+      </div>
+    </header>
+
+    <section class="hero">
+      <div style="flex:1">
+        <h2 style="margin:24px 0 6px 0">Премиум-подписки</h2>
+        <p class="lead">Доступ к консультациям, персональным программам и аналитике. Автопродление — по желанию.</p>
+      </div>
+      <div style="min-width:220px;text-align:right">
+        <div class="muted-small">Подписка для бота</div>
+        <div style="font-weight:700;margin-top:6px">Начиная от 10 500 ₸ / мес</div>
+      </div>
+    </section>
+
+    <main>
+      <div class="grid">
+        <!-- 1 month -->
+        <div class="card">
+          <div class="meta">
+            <div>
+              <div class="period">Старт</div>
+              <div class="price">10 500 ₸</div>
+            </div>
+            <div class="muted-small">1 месяц</div>
+          </div>
+          <ul class="benefits">
+            <li>✅ Полный доступ ко всем функциям</li>
+            <li>✅ Персональная поддержка</li>
+            <li>✅ Быстрый старт</li>
+          </ul>
+          <div style="margin-top:auto">
+            <a class="btn" role="button" href="#" onclick="return pay('1m')">Оформить за 10 500 ₸</a>
+          </div>
+        </div>
+
+        <!-- 3 months -->
+        <div class="card">
+          <div class="meta">
+            <div>
+              <div class="period">Оптимум</div>
+              <div class="price">31 500 ₸</div>
+            </div>
+            <div class="muted-small">3 месяца</div>
+          </div>
+          <ul class="benefits">
+            <li>✅ Всё из тарифа "Старт"</li>
+            <li>✅ Экономия по сравнению с помесячной оплатой</li>
+            <li>✅ Приоритет в обработке запросов</li>
+          </ul>
+          <div style="margin-top:auto">
+            <a class="btn" role="button" href="#" onclick="return pay('3m')">Оформить за 31 500 ₸</a>
+          </div>
+        </div>
+
+        <!-- 6 months -->
+        <div class="card">
+          <div class="meta">
+            <div>
+              <div class="period">Премиум</div>
+              <div class="price">63 000 ₸</div>
+            </div>
+            <div class="muted-small">6 месяцев</div>
+          </div>
+          <ul class="benefits">
+            <li>✅ Всё из "Оптимум"</li>
+            <li>✅ Дополнительные рекомендации от экспертов</li>
+            <li>✅ Экономия при долгосрочной оплате</li>
+          </ul>
+          <div style="margin-top:auto">
+            <a class="btn" role="button" href="#" onclick="return pay('6m')">Оформить за 63 000 ₸</a>
+          </div>
+        </div>
+
+        <!-- 12 months -->
+        <div class="card">
+          <div class="ribbon">Лучшее</div>
+          <div class="meta">
+            <div>
+              <div class="period">VIP</div>
+              <div class="price">126 000 ₸</div>
+            </div>
+            <div class="muted-small">12 месяцев</div>
+          </div>
+          <ul class="benefits">
+            <li>✅ Всё из "Премиум"</li>
+            <li>✅ Персональный менеджер</li>
+            <li>✅ Максимальная экономия</li>
+          </ul>
+          <div style="margin-top:auto">
+            <a class="btn" role="button" href="#" onclick="return pay('12m')">Оформить за 126 000 ₸</a>
+          </div>
+        </div>
+      </div>
+
+      <footer>
+        <p>Вопросы по подписке: <strong>@{ADMIN_TELEGRAM_USERNAME}</strong>. После оплаты вы получите уведомление в боте.</p>
+        <p>Для подключения оплаты требуется серверная часть для безопасной генерации платежных ссылок PayBox.</p>
+      </footer>
+    </main>
+  </div>
+
+  <script>
+    // Plan mapping — keys used when calling server-side create-payment endpoint
+    const PLANS = {
+      '1m': {label: '1 месяц', price: 10500, code: 'plan_1m'},
+      '3m': {label: '3 месяца', price: 31500, code: 'plan_3m'},
+      '6m': {label: '6 месяцев', price: 63000, code: 'plan_6m'},
+      '12m': {label: '12 месяцев', price: 126000, code: 'plan_12m'}
+    };
+
+    function pay(key){
+      const plan = PLANS[key];
+      if(!plan) return false;
+      // Redirect to server endpoint which should create a PayBox invoice and redirect to its payment page.
+      // Replace /create-payment with your real server URL (e.g. https://example.com/create-payment)
+      const url = `/create-payment?plan=${encodeURIComponent(plan.code)}`;
+      // open in new tab
+      window.open(url, '_blank');
+      return false; // prevent default anchor behavior
+    }
+  </script>
+
+  <!--
+    -------------------------
+    SERVER EXAMPLES (make on your own host)
+    -------------------------
+
+    1) Node.js (Express) example (replace PAYBOX_* with your real credentials and adapt to PayBox API):
+
+    // server.js
+    const express = require('express');
+    const fetch = require('node-fetch'); // or global fetch in newer Node
+    const app = express();
+    app.use(express.urlencoded({ extended: true }));
+    app.use(express.json());
+
+    const PORT = process.env.PORT || 3000;
+    const MERCHANT_ID = process.env.PAYBOX_MERCHANT_ID; // from PayBox
+    const SECRET = process.env.PAYBOX_SECRET; // secret key
+
+    const PLAN_MAP = {
+      'plan_1m': {amount: 10500, description: 'Подписка 1 месяц'},
+      'plan_3m': {amount: 31500, description: 'Подписка 3 месяца'},
+      'plan_6m': {amount: 63000, description: 'Подписка 6 месяцев'},
+      'plan_12m': {amount: 126000, description: 'Подписка 12 месяцев'}
+    };
+
+    app.get('/create-payment', async (req, res) => {
+      const plan = req.query.plan;
+      if(!PLAN_MAP[plan]) return res.status(400).send('Unknown plan');
+      const data = PLAN_MAP[plan];
+
+      // Build PayBox request here (this is pseudocode — adapt to PayBox documentation):
+      // Example: call PayBox API to create an invoice and get payment_url
+
+      try{
+        // Example POST to PayBox (replace URL and params)
+        const pbResp = await fetch('https://paybox.money/api/create_invoice', {
+          method: 'POST',
+          headers: {'Content-Type':'application/json'},
+          body: JSON.stringify({merchant_id: MERCHANT_ID, amount: data.amount, currency: 'KZT', description: data.description, metadata: {plan}})
+        });
+        const pbJson = await pbResp.json();
+        if(pbJson && pbJson.payment_url){
+          return res.redirect(pbJson.payment_url);
+        }
+        return res.status(500).send('Payment provider error');
+      }catch(err){
+        console.error(err);
+        return res.status(500).send('Server error');
+      }
+    });
+
+    // Webhook endpoint: PayBox will POST here on successful payment
+    app.post('/paybox-webhook', (req, res) =>{
+      // verify signature using SECRET
+      // mark subscription active in DB for user_id from metadata
+      console.log('webhook', req.body);
+      res.sendStatus(200);
+    });
+
+    app.listen(PORT, ()=>console.log('Server listening', PORT));
+
+    2) Python Flask minimal example:
+
+    from flask import Flask, request, redirect, jsonify
+    import os
+    import requests
+
+    app = Flask(__name__)
+    MERCHANT_ID = os.getenv('PAYBOX_MERCHANT_ID')
+    SECRET = os.getenv('PAYBOX_SECRET')
+
+    PLAN_MAP = {
+      'plan_1m': {'amount':10500,'description':'Подписка 1 месяц'},
+      'plan_3m': {'amount':31500,'description':'Подписка 3 месяца'},
+      'plan_6m': {'amount':63000,'description':'Подписка 6 месяцев'},
+      'plan_12m': {'amount':126000,'description':'Подписка 12 месяцев'}
+    }
+
+    @app.route('/create-payment')
+    def create_payment():
+      plan = request.args.get('plan')
+      if plan not in PLAN_MAP:
+        return 'Unknown plan',400
+      data = PLAN_MAP[plan]
+      # Make request to PayBox API to create invoice (pseudocode)
+      payload = {
+        'merchant_id': MERCHANT_ID,
+        'amount': data['amount'],
+        'currency': 'KZT',
+        'description': data['description'],
+        'metadata': {'plan':plan}
+      }
+      # resp = requests.post('https://paybox.money/api/create_invoice', json=payload)
+      # resp_json = resp.json()
+      # return redirect(resp_json['payment_url'])
+      return jsonify({'ok': True, 'note': 'Replace this logic with PayBox API call on server.'})
+
+    @app.route('/paybox-webhook', methods=['POST'])
+    def paybox_webhook():
+      # verify signature and update DB
+      print('webhook', request.json)
+      return '', 200
+
+    if __name__ == '__main__':
+      app.run(debug=True, host='0.0.0.0', port=5000)
+
+    -->
+</body>
+</html>
