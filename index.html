@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Подписки — Мой Telegram Бот</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #4facfe, #00f2fe);
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+        header {
+            text-align: center;
+            padding: 30px;
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+        h1 {
+            margin: 0;
+            font-size: 2.5rem;
+        }
+        .container {
+            max-width: 900px;
+            margin: 40px auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+        }
+        .card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            padding: 20px;
+            text-align: center;
+            transition: 0.3s;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+        .price {
+            font-size: 1.8rem;
+            color: #4facfe;
+            margin: 15px 0;
+        }
+        .btn {
+            display: inline-block;
+            background: #4facfe;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+        .btn:hover {
+            background: #00c6fb;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Выберите подходящую подписку</h1>
+        <p>Доступ к премиум-функциям бота</p>
+    </header>
+
+    <div class="container">
+        <div class="card">
+            <h2>1 месяц</h2>
+            <div class="price">10 500 ₸</div>
+            <p>Отлично подойдёт, чтобы попробовать все возможности.</p>
+            <a href="#" class="btn">Оплатить</a>
+        </div>
+
+        <div class="card">
+            <h2>3 месяца</h2>
+            <div class="price">31 500 ₸</div>
+            <p>Скидка при оплате за 3 месяца сразу.</p>
+            <a href="#" class="btn">Оплатить</a>
+        </div>
+
+        <div class="card">
+            <h2>6 месяцев</h2>
+            <div class="price">63 000 ₸</div>
+            <p>Лучший выбор для активных пользователей.</p>
+            <a href="#" class="btn">Оплатить</a>
+        </div>
+
+        <div class="card">
+            <h2>12 месяцев</h2>
+            <div class="price">126 000 ₸</div>
+            <p>Максимальная выгода и комфорт на целый год.</p>
+            <a href="#" class="btn">Оплатить</a>
+        </div>
+    </div>
+</body>
+</html>
