@@ -3,98 +3,114 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Подписки — Мой Telegram Бот</title>
+    <title>Мой Сайт с Подписками</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            background: linear-gradient(135deg, #4facfe, #00f2fe);
             margin: 0;
             padding: 0;
-            color: #333;
+            background-color: #e0f7fa;
+            background-image: linear-gradient(135deg, #e0f7fa 25%, #b2ebf2 75%);
         }
         header {
-            text-align: center;
-            padding: 30px;
-            background-color: rgba(255, 255, 255, 0.2);
+            background-color: #0097a7;
             color: white;
+            padding: 20px 0;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
         }
-        h1 {
-            margin: 0;
-            font-size: 2.5rem;
+        nav {
+            margin: 20px 0;
+        }
+        nav a {
+            margin: 0 15px;
+            text-decoration: none;
+            color: #fff;
+            font-weight: bold;
         }
         .container {
-            max-width: 900px;
-            margin: 40px auto;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 20px;
+            max-width: 800px;
+            margin: auto;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            background-image: url('https://www.transparenttextures.com/patterns/white-paper.png');
+        }
+        .cards {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
         }
         .card {
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            border: 1px solid #b2ebf2;
+            border-radius: 5px;
             padding: 20px;
+            margin: 10px;
             text-align: center;
-            transition: 0.3s;
+            background-color: #f0f4f8;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            flex-basis: 45%; /* Занимает 45% ширины контейнера */
         }
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-        }
-        .price {
-            font-size: 1.8rem;
-            color: #4facfe;
-            margin: 15px 0;
-        }
-        .btn {
+        .button {
             display: inline-block;
-            background: #4facfe;
-            color: white;
             padding: 10px 20px;
-            border-radius: 25px;
+            background-color: #0097a7;
+            color: white;
             text-decoration: none;
-            font-weight: bold;
-            transition: 0.3s;
+            border-radius: 5px;
+            transition: background-color 0.3s;
         }
-        .btn:hover {
-            background: #00c6fb;
+        .button:hover {
+            background-color: #00796b;
+        }
+        h2, h3 {
+            color: #00695c;
         }
     </style>
 </head>
 <body>
-    <header>
-        <h1>Выберите подходящую подписку</h1>
-        <p>Доступ к премиум-функциям бота</p>
-    </header>
 
-    <div class="container">
+<header>
+    <h1>Добро пожаловать на мой сайт!</h1>
+    <nav>
+        <a href="#home">Главная</a>
+        <a href="#subscriptions">Подписки</a>
+    </nav>
+</header>
+
+<div class="container" id="home">
+    <h2>Главная страница</h2>
+    <p>На этом сайте вы можете подписаться на различные услуги. Выберите подходящую подписку и переходите к оплате.</p>
+</div>
+
+<div class="container" id="subscriptions">
+    <h2>Подписки</h2>
+    <div class="cards">
         <div class="card">
-            <h2>1 месяц</h2>
-            <div class="price">10 500 ₸</div>
-            <p>Отлично подойдёт, чтобы попробовать все возможности.</p>
-            <a href="#" class="btn">Оплатить</a>
+            <h3>1 месяц</h3>
+            <p>Цена: $18.80</p>
+            <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=YOUR_BUTTON_ID_1" class="button">Купить</a>
         </div>
-
         <div class="card">
-            <h2>3 месяца</h2>
-            <div class="price">31 500 ₸</div>
-            <p>Скидка при оплате за 3 месяца сразу.</p>
-            <a href="#" class="btn">Оплатить</a>
-        </div>
-
-        <div class="card">
-            <h2>6 месяцев</h2>
-            <div class="price">63 000 ₸</div>
-            <p>Лучший выбор для активных пользователей.</p>
-            <a href="#" class="btn">Оплатить</a>
-        </div>
-
-        <div class="card">
-            <h2>12 месяцев</h2>
-            <div class="price">126 000 ₸</div>
-            <p>Максимальная выгода и комфорт на целый год.</p>
-            <a href="#" class="btn">Оплатить</a>
+            <h3>3 месяца</h3>
+            <p>Цена: $56.40</p>
+            <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=YOUR_BUTTON_ID_2" class="button">Купить</a>
         </div>
     </div>
+    <div class="cards">
+        <div class="card">
+            <h3>6 месяцев</h3>
+            <p>Цена: $112.80</p>
+            <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=YOUR_BUTTON_ID_3" class="button">Купить</a>
+        </div>
+        <div class="card">
+            <h3>12 месяцев</h3>
+            <p>Цена: $225.70</p>
+            <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=YOUR_BUTTON_ID_4" class="button">Купить</a>
+        </div>
+    </div>
+</div>
+
 </body>
 </html>
